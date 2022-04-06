@@ -1,4 +1,4 @@
-# Gatling Load Testing REST API
+# TEST DATABASE WITH TESTCONTAINERS
 
 it uses Java 17
 
@@ -11,16 +11,11 @@ on the main folder run `mvn clean package` to generate the jar file. It will be 
 
 ## run tests
 
-run mvn verify
+run `mvn verify`
 
 ## code coverage
 
 the code coverage report can be accessed in the target folder target/site/jacoco/index.html
-
-## gatling load tests
-
-to run gatling, first make sure the application is running `mvn spring-boot:run` then open another terminal session and run `mvn gatling:test`
-test reports can be found in the `target/gatling` directory each named by timestamp they ran.
 
 ## Further help
 
