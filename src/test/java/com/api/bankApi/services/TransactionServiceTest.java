@@ -211,21 +211,20 @@ public class TransactionServiceTest {
                 .verify();
     }
     
-//    @Test
-//    @DisplayName("Test withdraw limit for max daily count exceeded successfully")
-//    void withdrawLimitDailyCountAmountExceededSuccess() throws Exception {
-//        bankAccountRepository.updateAccountBalance(BigDecimal.valueOf(10.00)).block();
-//        transactionRepository.deleteAll().block();
-//        
-//        for (int i = 0; i < 3; i++) {
-//            transactionRepository.save(Transaction.builder().amount(BigDecimal.valueOf(2.00)).creationDate(LocalDateTime.now())
-//                    .reference("QEQE2332").transaction_type("WITHDRAWAL").build()).block();
-//        }
-//                
-//        Mono<String> txnResp = transactionService.withdrawFunds(new NewTransactionDto("QACE4545SXW", BigDecimal.valueOf(2.00)));
-//        StepVerifier.create(txnResp)
-//                .expectErrorMessage("Exceeded total number of withdrawals allowed per day")
-//                .log()
-//                .verify();
-//    }
+    @Test
+    @DisplayName("Test withdraw limit for max daily count exceeded successfully")
+    void withdrawLimitDailyCountAmountExceededSuccess() throws Exception {
+        bankAccountRepository.updateAccountBalance(BigDecimal.valueOf(10.00)).block();
+        
+        for (int i = 0; i < 3; i++) {
+            transactionRepository.save(Transaction.builder().amount(BigDecimal.valueOf(2.00)).creationDate(LocalDateTime.now())
+                    .reference("QEQE2332").transaction_type("WITHDRAWAL").build()).block();
+        }
+                
+        Mono<String> txnResp = transactionService.withdrawFunds(new NewTransactionDto("QACE4545SXW", BigDecimal.valueOf(2.00)));
+        StepVerifier.create(txnResp)
+                .expectErrorMessage("Exceeded total number of withdrawals allowed per day")
+                .log()
+                .verify();
+    }
 }
