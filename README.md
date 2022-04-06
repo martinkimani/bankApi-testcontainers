@@ -1,13 +1,12 @@
 # TEST DATABASE WITH TESTCONTAINERS
 
+
+## Requirements
 it uses Java 17
 
 if you have issues running maven commands, for java 16 and above use maven 3.8.4 `https://maven.apache.org/install.html`
 
-
-## Build Fat jar
-
-on the main folder run `mvn clean package` to generate the jar file. It will be stored in the `target/` directory.
+you will also need to install docker and you are good to go.
 
 ## run tests
 
