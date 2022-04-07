@@ -4,12 +4,8 @@ import com.api.bankApi.models.NewTransactionDto;
 import com.api.bankApi.models.Transaction;
 import com.api.bankApi.repositories.BankAccountRepository;
 import com.api.bankApi.repositories.TransactionRepository;
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
-import static org.springframework.data.r2dbc.connectionfactory.init.ScriptUtils.DEFAULT_COMMENT_PREFIX;
-import static org.springframework.data.r2dbc.connectionfactory.init.ScriptUtils.DEFAULT_STATEMENT_SEPARATOR;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -28,8 +22,7 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import org.testcontainers.ext.ScriptUtils;
-import org.testcontainers.jdbc.JdbcDatabaseDelegate;
+import org.testcontainers.utility.MountableFile;
 
 /**
  *
@@ -37,21 +30,19 @@ import org.testcontainers.jdbc.JdbcDatabaseDelegate;
  */
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-//@DataR2dbcTest
 @Testcontainers
 public class TransactionServiceTest {
     
-    //@Container
     private static final MySQLContainer database = new MySQLContainer("mysql:8");
     static {
         try {
-            final String script = Resources.toString(Resources.getResource("schema.sql"), Charsets.UTF_8);
+            database.withCopyFileToContainer(MountableFile.forClasspathResource("schema2.sql"), "/docker-entrypoint-initdb.d/schema.sql");
             database.start();
-            ScriptUtils.executeDatabaseScript(new JdbcDatabaseDelegate(database,""), "schema.sql", script, false, false, DEFAULT_COMMENT_PREFIX, 
-                    DEFAULT_STATEMENT_SEPARATOR, "$$", "$$$");
-        } catch (Exception ex) {
-            Logger.getLogger(TransactionServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
+            
+            
     }
 
     @DynamicPropertySource
